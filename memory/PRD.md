@@ -33,23 +33,25 @@ Modern responsive marketplace prototype for "LIBRA 3D PRINTING" — a premium e-
 8. Footer with logo, links, contact, socials
 
 ## What's Been Implemented (Feb 2026)
-- ✅ All 9 routes: /, /shop, /categories, /product/:id, /custom-orders, /checkout, /about, /contact, /admin
+- ✅ All 9 routes + bilingual i18n (EN/EL) + multi-currency (EUR/USD)
+- ✅ LocaleContext with lazy useState initializer (race-free localStorage persistence)
+- ✅ LocaleSwitcher in navbar (desktop + mobile) with language + currency sections
+- ✅ Default: Greek + EUR (Greece-based studio targeting Greek customers)
+- ✅ formatPrice() uses Intl.NumberFormat with proper locale formatting ('38,00 €' in Greek, '$41.04' in English)
+- ✅ Translations cover nav, hero, all section headings, CTAs, all form labels/validation/success states, cart, checkout, custom orders, contact, about, admin, footer
+- ✅ Prices everywhere (cards, detail, cart, checkout, admin) convert via EUR-base + rate table
 - ✅ Sticky navbar with scroll-aware blur, mobile menu, cart badge
 - ✅ Home page with 6 sections + marquee + animated entrance
-- ✅ Shop with 6 filter dimensions + 4-way sort + URL category param
-- ✅ Categories page with bento-style grid (7 cards)
-- ✅ Product detail with image gallery, color/qty selectors, Description/Specs/Reviews tabs, related products
-- ✅ Cart drawer (slide-in from right), localStorage-persisted cart
-- ✅ Checkout flow with shipping + payment placeholder + success state
-- ✅ Custom orders form with validation + success state
-- ✅ Contact form with validation + success state
-- ✅ About page with story, stats, value props
-- ✅ Admin dashboard with 4 stat cards, mini revenue chart, top sellers, orders table, requests list, products table
-- ✅ Footer present on all pages
-- ✅ 8 mocked products across 7 categories (with images from Unsplash)
-- ✅ Brand assets (logo, header) embedded exactly as supplied
-- ✅ data-testid coverage on all interactive + key info elements
-- ✅ Frontend testing: 100% pass (iteration_1)
+- ✅ Shop with 6 filter dimensions + 4-way sort + URL category param + currency-aware price filter
+- ✅ Categories page (7 cards, bento layout, Greek/English titles)
+- ✅ Product detail with image gallery, color/qty selectors, tabs, related products
+- ✅ Cart drawer + localStorage-persisted cart
+- ✅ Checkout flow with shipping + payment placeholder + Greek-locale-aware success state
+- ✅ Custom orders form, Contact form, About, Admin dashboard mockup — all bilingual
+- ✅ Frontend testing: iteration_1 100% pass; iteration_2 12/13 pass → persistence bug fixed → verified manually
+
+## Recent Updates
+- Feb 2026: Added bilingual (EN/EL) + bicurrency (EUR/USD) support. Default Greek + EUR.
 
 ## Prioritized Backlog
 ### P1 (next features the user may want)

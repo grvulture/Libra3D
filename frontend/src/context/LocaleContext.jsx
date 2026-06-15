@@ -23,22 +23,32 @@ const LOCALES = {
 };
 
 export const LocaleProvider = ({ children }) => {
-  const [lang, setLang] = useState("el"); // Default to Greek (Greece-based)
-  const [currency, setCurrency] = useState("EUR"); // Default to EUR
-
-  // Load from localStorage
-  useEffect(() => {
+  // Lazy initializers read localStorage synchronously on first render,
+  // avoiding any race with the persist effect under StrictMode.
+  const [lang, setLang] = useState(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {
         const saved = JSON.parse(raw);
-        if (saved.lang && TRANSLATIONS[saved.lang]) setLang(saved.lang);
-        if (saved.currency && RATES[saved.currency]) setCurrency(saved.currency);
+        if (saved.lang && TRANSLATIONS[saved.lang]) return saved.lang;
       }
     } catch {
       /* ignore */
     }
-  }, []);
+    return "el"; // Default to Greek (Greece-based)
+  });
+  const [currency, setCurrency] = useState(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const saved = JSON.parse(raw);
+        if (saved.currency && RATES[saved.currency]) return saved.currency;
+      }
+    } catch {
+      /* ignore */
+    }
+    return "EUR"; // Default to EUR
+  });
 
   // Persist on change
   useEffect(() => {
