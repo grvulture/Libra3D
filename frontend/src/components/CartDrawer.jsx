@@ -2,14 +2,17 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { X, Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
 import { useCart } from "../context/CartContext";
+import { useLocale } from "../context/LocaleContext";
 
-const SHIPPING_THRESHOLD = 75;
+const SHIPPING_THRESHOLD = 75; // EUR
+const SHIPPING_FEE = 8.5; // EUR
 
 export const CartDrawer = () => {
   const { drawerOpen, setDrawerOpen, items, updateQty, removeItem, subtotal } = useCart();
+  const { t, formatPrice } = useLocale();
   const navigate = useNavigate();
 
-  const shipping = subtotal === 0 ? 0 : subtotal >= SHIPPING_THRESHOLD ? 0 : 8.5;
+  const shipping = subtotal === 0 ? 0 : subtotal >= SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE;
   const total = subtotal + shipping;
 
   const goCheckout = () => {
@@ -37,7 +40,7 @@ export const CartDrawer = () => {
         <div className="p-6 border-b border-[#D4A53A]/20 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <ShoppingBag size={18} className="text-[#D4A53A]" />
-            <h3 className="font-heading font-bold text-white text-lg tracking-wide">Your Cart</h3>
+            <h3 className="font-heading font-bold text-white text-lg tracking-wide">{t("cart.title")}</h3>
             <span className="text-white/60 text-sm">({items.length})</span>
           </div>
           <button
@@ -56,7 +59,7 @@ export const CartDrawer = () => {
               <div className="mx-auto h-16 w-16 border border-[#D4A53A]/30 flex items-center justify-center mb-5">
                 <ShoppingBag size={22} className="text-[#D4A53A]" />
               </div>
-              <p className="text-white/70 mb-6">Your cart is empty.</p>
+              <p className="text-white/70 mb-6">{t("cart.empty")}</p>
               <button
                 onClick={() => {
                   setDrawerOpen(false);
@@ -65,7 +68,7 @@ export const CartDrawer = () => {
                 data-testid="cart-empty-shop-btn"
                 className="btn-ghost-gold"
               >
-                Browse Shop
+                {t("common.browseShop")}
               </button>
             </div>
           )}
@@ -117,7 +120,7 @@ export const CartDrawer = () => {
                     </button>
                   </div>
                   <div className="text-[#D4A53A] font-bold">
-                    ${(item.price * item.qty).toFixed(2)}
+                    {formatPrice(item.price * item.qty)}
                   </div>
                 </div>
               </div>
@@ -128,24 +131,24 @@ export const CartDrawer = () => {
         {items.length > 0 && (
           <div className="border-t border-[#D4A53A]/20 bg-[#0E5A5C] p-6 space-y-4">
             <div className="flex items-center justify-between text-sm text-white/75">
-              <span>Subtotal</span>
-              <span data-testid="cart-subtotal" className="text-white">${subtotal.toFixed(2)}</span>
+              <span>{t("common.subtotal")}</span>
+              <span data-testid="cart-subtotal" className="text-white">{formatPrice(subtotal)}</span>
             </div>
             <div className="flex items-center justify-between text-sm text-white/75">
-              <span>Shipping est.</span>
+              <span>{t("common.shippingEst")}</span>
               <span className="text-white">
-                {shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}
+                {shipping === 0 ? t("common.free") : formatPrice(shipping)}
               </span>
             </div>
             <div className="text-[11px] text-white/55">
               {subtotal < SHIPPING_THRESHOLD
-                ? `Add $${(SHIPPING_THRESHOLD - subtotal).toFixed(2)} for free shipping.`
-                : "You unlocked free shipping."}
+                ? t("cart.unlockFreeShipping", { amount: formatPrice(SHIPPING_THRESHOLD - subtotal) })
+                : t("cart.freeShippingUnlocked")}
             </div>
             <div className="border-t border-[#D4A53A]/15 pt-4 flex items-center justify-between">
-              <span className="font-heading text-white text-base">Total</span>
+              <span className="font-heading text-white text-base">{t("common.total")}</span>
               <span data-testid="cart-total" className="font-heading font-bold text-[#D4A53A] text-xl">
-                ${total.toFixed(2)}
+                {formatPrice(total)}
               </span>
             </div>
             <button
@@ -153,14 +156,14 @@ export const CartDrawer = () => {
               onClick={goCheckout}
               className="btn-gold w-full justify-center"
             >
-              Checkout
+              {t("common.checkout")}
             </button>
             <Link
               to="/shop"
               onClick={() => setDrawerOpen(false)}
               className="block text-center text-[11px] uppercase tracking-[0.22em] text-white/65 hover:text-[#D4A53A]"
             >
-              Continue shopping
+              {t("common.continueShopping")}
             </Link>
           </div>
         )}

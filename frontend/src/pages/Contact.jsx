@@ -1,40 +1,40 @@
 import React, { useState } from "react";
 import { Mail, Phone, MapPin, Send, MessageSquare, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
+import { useLocale } from "../context/LocaleContext";
 
 const Contact = () => {
+  const { t } = useLocale();
   const [form, setForm] = useState({ name: "", email: "", subject: "General", message: "" });
   const [sent, setSent] = useState(false);
 
   const submit = (e) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.message) {
-      toast.error("Please complete name, email and message.");
+      toast.error(t("contact.errorRequired"));
       return;
     }
     setSent(true);
-    toast.success("Message sent — we'll reply within 24h.");
+    toast.success(t("contact.successToast"));
   };
 
   return (
     <div data-testid="contact-page" className="text-white">
       <section className="border-b border-[#D4A53A]/15">
         <div className="max-w-7xl mx-auto px-6 lg:px-10 pt-16 pb-10">
-          <div className="eyebrow mb-3">Talk to the studio</div>
-          <h1 className="font-heading font-black text-4xl lg:text-6xl">Get in touch</h1>
-          <p className="text-white/75 mt-4 max-w-2xl">
-            Whether it&apos;s a stock order, a custom brief, or a partnership — we&apos;d love to hear from you.
-          </p>
+          <div className="eyebrow mb-3">{t("contact.eyebrow")}</div>
+          <h1 className="font-heading font-black text-4xl lg:text-6xl">{t("contact.title")}</h1>
+          <p className="text-white/75 mt-4 max-w-2xl">{t("contact.subtitle")}</p>
         </div>
       </section>
 
       <section className="max-w-7xl mx-auto px-6 lg:px-10 py-14 grid grid-cols-1 lg:grid-cols-12 gap-10">
         <aside className="lg:col-span-4 space-y-5">
           {[
-            { icon: Mail, t: "Email", v: "hello@libra3d.studio" },
-            { icon: Phone, t: "Phone", v: "+49 30 1234 5678" },
-            { icon: MapPin, t: "Studio", v: "Workshop 14 · Unit B\nAtelier District · Berlin" },
-            { icon: MessageSquare, t: "Live chat", v: "Mon — Fri · 10:00–18:00 CET" },
+            { icon: Mail, t: t("contact.emailLabel"), v: "hello@libra3d.gr" },
+            { icon: Phone, t: t("contact.phoneLabel"), v: "+30 210 1234 567" },
+            { icon: MapPin, t: t("contact.studioLabel"), v: "Λεωφ. Συγγρού 134 · Studio Β\nΑθήνα · Ελλάδα" },
+            { icon: MessageSquare, t: t("contact.chatLabel"), v: t("contact.chatValue") },
           ].map((c) => (
             <div key={c.t} className="border border-[#D4A53A]/20 p-6 bg-[#0F5E60] flex gap-5">
               <div className="h-11 w-11 border border-[#D4A53A]/40 flex items-center justify-center text-[#D4A53A] flex-shrink-0">
@@ -54,40 +54,39 @@ const Contact = () => {
               <div className="h-14 w-14 mx-auto border border-[#D4A53A] flex items-center justify-center mb-6">
                 <CheckCircle2 size={22} className="text-[#D4A53A]" />
               </div>
-              <h2 className="font-heading font-black text-3xl">Message sent.</h2>
-              <p className="text-white/75 mt-3">Thanks {form.name.split(" ")[0]} — we&apos;ll reply to {form.email} shortly.</p>
+              <h2 className="font-heading font-black text-3xl">{t("contact.successTitle")}</h2>
+              <p className="text-white/75 mt-3">
+                {t("contact.successBody", { name: form.name.split(" ")[0], email: form.email })}
+              </p>
               <button
-                onClick={() => {
-                  setSent(false);
-                  setForm({ name: "", email: "", subject: "General", message: "" });
-                }}
+                onClick={() => { setSent(false); setForm({ name: "", email: "", subject: "General", message: "" }); }}
                 className="btn-ghost-gold mt-8"
               >
-                Send another
+                {t("contact.another")}
               </button>
             </div>
           ) : (
             <form onSubmit={submit} data-testid="contact-form" className="border border-[#D4A53A]/20 bg-[#0F5E60] p-7 lg:p-10 space-y-5">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <Field label="Name *">
+                <Field label={t("contact.name")}>
                   <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} data-testid="contact-name" className="brand-input" />
                 </Field>
-                <Field label="Email *">
+                <Field label={t("contact.email")}>
                   <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} data-testid="contact-email" className="brand-input" />
                 </Field>
               </div>
-              <Field label="Subject">
+              <Field label={t("contact.subject")}>
                 <select value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })} data-testid="contact-subject" className="brand-input">
                   {["General", "Custom order", "Wholesale", "Press", "Partnership"].map((s) => (
                     <option key={s} value={s} className="bg-[#0F5E60]">{s}</option>
                   ))}
                 </select>
               </Field>
-              <Field label="Message *">
+              <Field label={t("contact.message")}>
                 <textarea rows={6} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} data-testid="contact-message" className="brand-input resize-none" />
               </Field>
               <button type="submit" className="btn-gold" data-testid="contact-send">
-                <Send size={14} /> Send message
+                <Send size={14} /> {t("contact.send")}
               </button>
             </form>
           )}

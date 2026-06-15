@@ -3,15 +3,17 @@ import { useSearchParams } from "react-router-dom";
 import { SlidersHorizontal, X, ChevronDown, Star } from "lucide-react";
 import { PRODUCTS, CATEGORIES, MATERIALS, COLORS } from "../data/products";
 import { ProductCard } from "../components/ProductCard";
+import { useLocale } from "../context/LocaleContext";
 
-const SORTS = [
-  { id: "newest", label: "Newest" },
-  { id: "best", label: "Best Selling" },
-  { id: "low", label: "Price: Low to High" },
-  { id: "high", label: "Price: High to Low" },
+const SORT_KEYS = [
+  { id: "newest", key: "shop.sort.newest" },
+  { id: "best", key: "shop.sort.best" },
+  { id: "low", key: "shop.sort.low" },
+  { id: "high", key: "shop.sort.high" },
 ];
 
 const Shop = () => {
+  const { t, formatPrice, symbol } = useLocale();
   const [params, setParams] = useSearchParams();
   const initialCat = params.get("category") || "all";
 
@@ -64,10 +66,10 @@ const Shop = () => {
       {/* Page header */}
       <section className="border-b border-[#D4A53A]/15">
         <div className="max-w-7xl mx-auto px-6 lg:px-10 pt-16 pb-10">
-          <div className="eyebrow mb-4">Marketplace</div>
-          <h1 className="font-heading font-black text-4xl lg:text-6xl">All Products</h1>
+          <div className="eyebrow mb-4">{t("shop.eyebrow")}</div>
+          <h1 className="font-heading font-black text-4xl lg:text-6xl">{t("shop.title")}</h1>
           <p className="text-white/70 mt-3 max-w-2xl">
-            Browse {PRODUCTS.length} curated 3D-printed pieces across 7 categories — filter by material, color, price and more.
+            {t("shop.subtitle", { count: PRODUCTS.length })}
           </p>
         </div>
       </section>
@@ -80,15 +82,15 @@ const Shop = () => {
             onClick={() => setFiltersOpen(true)}
             className="lg:hidden btn-ghost-gold !py-2 !px-4 !text-[11px]"
           >
-            <SlidersHorizontal size={14} /> Filters
+            <SlidersHorizontal size={14} /> {t("shop.filters")}
           </button>
 
           <div className="text-sm text-white/70">
-            <span data-testid="shop-result-count" className="text-white font-semibold">{filtered.length}</span> products
+            <span data-testid="shop-result-count" className="text-white font-semibold">{filtered.length}</span> {t("common.products")}
           </div>
 
           <div className="relative">
-            <label className="text-xs uppercase tracking-[0.22em] text-white/55 mr-3 hidden md:inline">Sort by</label>
+            <label className="text-xs uppercase tracking-[0.22em] text-white/55 mr-3 hidden md:inline">{t("shop.sortBy")}</label>
             <div className="relative inline-block">
               <select
                 data-testid="shop-sort-select"
@@ -96,8 +98,8 @@ const Shop = () => {
                 onChange={(e) => setSort(e.target.value)}
                 className="appearance-none bg-[#0F5E60] border border-[#D4A53A]/30 text-white text-sm px-4 py-2 pr-9 focus:outline-none focus:border-[#D4A53A]"
               >
-                {SORTS.map((s) => (
-                  <option key={s.id} value={s.id} className="bg-[#0F5E60]">{s.label}</option>
+                {SORT_KEYS.map((s) => (
+                  <option key={s.id} value={s.id} className="bg-[#0F5E60]">{t(s.key)}</option>
                 ))}
               </select>
               <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#D4A53A] pointer-events-none" />
@@ -110,6 +112,9 @@ const Shop = () => {
         <div className="flex gap-10">
           {/* Sidebar */}
           <FilterSidebar
+            t={t}
+            symbol={symbol}
+            formatPrice={formatPrice}
             open={filtersOpen}
             onClose={() => setFiltersOpen(false)}
             category={category}
@@ -135,8 +140,8 @@ const Shop = () => {
           <div className="flex-1 min-w-0">
             {filtered.length === 0 ? (
               <div className="border border-[#D4A53A]/20 p-12 text-center">
-                <p className="text-white/70">No products match your filters.</p>
-                <button onClick={clearAll} className="btn-ghost-gold mt-6">Clear filters</button>
+                <p className="text-white/70">{t("shop.noResults")}</p>
+                <button onClick={clearAll} className="btn-ghost-gold mt-6">{t("shop.filter.clear")}</button>
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" data-testid="shop-grid">
@@ -152,27 +157,14 @@ const Shop = () => {
   );
 };
 
-const FilterSidebar = ({
-  open, onClose, category, setCategory, materials, toggleMaterial,
-  colors, toggleColor, price, setPrice, availability, setAvailability,
-  minRating, setMinRating, clearAll,
-}) => {
+const FilterSidebar = (props) => {
+  const { open, onClose, t } = props;
   return (
     <>
-      {/* Desktop sidebar */}
       <aside className="hidden lg:block w-72 flex-shrink-0">
-        <SidebarBody
-          category={category} setCategory={setCategory}
-          materials={materials} toggleMaterial={toggleMaterial}
-          colors={colors} toggleColor={toggleColor}
-          price={price} setPrice={setPrice}
-          availability={availability} setAvailability={setAvailability}
-          minRating={minRating} setMinRating={setMinRating}
-          clearAll={clearAll}
-        />
+        <SidebarBody {...props} />
       </aside>
 
-      {/* Mobile drawer */}
       <div
         onClick={onClose}
         className={`lg:hidden fixed inset-0 z-50 bg-black/60 transition-opacity ${
@@ -185,21 +177,13 @@ const FilterSidebar = ({
         } overflow-y-auto`}
       >
         <div className="p-6 border-b border-[#D4A53A]/20 flex items-center justify-between">
-          <h3 className="font-heading text-white font-bold">Filters</h3>
+          <h3 className="font-heading text-white font-bold">{t("shop.filters")}</h3>
           <button onClick={onClose} className="text-white/70 hover:text-[#D4A53A]">
             <X size={18} />
           </button>
         </div>
         <div className="p-6">
-          <SidebarBody
-            category={category} setCategory={setCategory}
-            materials={materials} toggleMaterial={toggleMaterial}
-            colors={colors} toggleColor={toggleColor}
-            price={price} setPrice={setPrice}
-            availability={availability} setAvailability={setAvailability}
-            minRating={minRating} setMinRating={setMinRating}
-            clearAll={clearAll}
-          />
+          <SidebarBody {...props} />
         </div>
       </aside>
     </>
@@ -214,12 +198,12 @@ const FilterSection = ({ title, children }) => (
 );
 
 const SidebarBody = ({
-  category, setCategory, materials, toggleMaterial, colors, toggleColor,
+  t, symbol, category, setCategory, materials, toggleMaterial, colors, toggleColor,
   price, setPrice, availability, setAvailability, minRating, setMinRating, clearAll,
 }) => {
   return (
     <div className="space-y-2">
-      <FilterSection title="Category">
+      <FilterSection title={t("shop.filter.category")}>
         <div className="space-y-2.5">
           <button
             onClick={() => setCategory("all")}
@@ -228,7 +212,7 @@ const SidebarBody = ({
               category === "all" ? "text-[#D4A53A]" : "text-white/80 hover:text-white"
             }`}
           >
-            All categories
+            {t("shop.filter.allCategories")}
           </button>
           {CATEGORIES.map((c) => (
             <button
@@ -239,13 +223,13 @@ const SidebarBody = ({
                 category === c.id ? "text-[#D4A53A]" : "text-white/80 hover:text-white"
               }`}
             >
-              {c.name}
+              {t(`cat.${c.id}`)}
             </button>
           ))}
         </div>
       </FilterSection>
 
-      <FilterSection title="Material">
+      <FilterSection title={t("shop.filter.material")}>
         <div className="space-y-3">
           {MATERIALS.map((m) => (
             <label key={m} className="flex items-center gap-3 cursor-pointer group">
@@ -262,7 +246,7 @@ const SidebarBody = ({
         </div>
       </FilterSection>
 
-      <FilterSection title="Price">
+      <FilterSection title={`${t("shop.filter.price")} (${symbol})`}>
         <div className="flex items-center gap-3 mb-3 text-sm">
           <input
             type="number"
@@ -290,7 +274,7 @@ const SidebarBody = ({
         />
       </FilterSection>
 
-      <FilterSection title="Color">
+      <FilterSection title={t("shop.filter.color")}>
         <div className="flex flex-wrap gap-2.5">
           {COLORS.map((c) => (
             <button
@@ -307,11 +291,11 @@ const SidebarBody = ({
         </div>
       </FilterSection>
 
-      <FilterSection title="Availability">
+      <FilterSection title={t("shop.filter.availability")}>
         {[
-          { id: "all", label: "All" },
-          { id: "in", label: "In stock" },
-          { id: "out", label: "Sold out" },
+          { id: "all", labelKey: "shop.filter.all" },
+          { id: "in", labelKey: "shop.filter.inStock" },
+          { id: "out", labelKey: "shop.filter.soldOut" },
         ].map((opt) => (
           <label key={opt.id} className="flex items-center gap-3 mb-2.5 cursor-pointer">
             <input
@@ -321,12 +305,12 @@ const SidebarBody = ({
               data-testid={`filter-avail-${opt.id}`}
               className="h-4 w-4 accent-[#D4A53A]"
             />
-            <span className="text-sm text-white/80">{opt.label}</span>
+            <span className="text-sm text-white/80">{t(opt.labelKey)}</span>
           </label>
         ))}
       </FilterSection>
 
-      <FilterSection title="Minimum Rating">
+      <FilterSection title={t("shop.filter.rating")}>
         <div className="flex gap-2">
           {[0, 3, 4, 4.5].map((r) => (
             <button
@@ -339,14 +323,14 @@ const SidebarBody = ({
                   : "border-[#D4A53A]/25 text-white/70 hover:border-[#D4A53A]/60"
               }`}
             >
-              {r === 0 ? "Any" : <>{r}+ <Star size={10} className="fill-[#D4A53A] text-[#D4A53A]" /></>}
+              {r === 0 ? t("shop.filter.any") : <>{r}+ <Star size={10} className="fill-[#D4A53A] text-[#D4A53A]" /></>}
             </button>
           ))}
         </div>
       </FilterSection>
 
       <button onClick={clearAll} data-testid="filter-clear-all" className="text-xs uppercase tracking-[0.22em] text-[#D4A53A] hover:text-white">
-        Clear all filters
+        {t("shop.filter.clear")}
       </button>
     </div>
   );

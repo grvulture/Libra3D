@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { Star, Minus, Plus, ShoppingBag, ShieldCheck, Truck, Repeat, ChevronRight } from "lucide-react";
 import { PRODUCTS, COLORS, REVIEWS, CATEGORIES } from "../data/products";
 import { useCart } from "../context/CartContext";
+import { useLocale } from "../context/LocaleContext";
 import { ProductCard } from "../components/ProductCard";
 
 const hexFor = (name) => COLORS.find((c) => c.name === name)?.hex || "#D4A53A";
@@ -12,6 +13,7 @@ const ProductDetail = () => {
   const product = PRODUCTS.find((p) => p.id === id);
   const navigate = useNavigate();
   const { addItem, setDrawerOpen } = useCart();
+  const { t, formatPrice } = useLocale();
   const [activeImg, setActiveImg] = useState(0);
   const [qty, setQty] = useState(1);
   const [color, setColor] = useState(product?.colors[0]);
@@ -30,34 +32,28 @@ const ProductDetail = () => {
     return (
       <div className="max-w-7xl mx-auto px-6 lg:px-10 py-32 text-center text-white">
         <h2 className="font-heading text-3xl">Product not found</h2>
-        <Link to="/shop" className="btn-ghost-gold mt-6 inline-flex">Back to shop</Link>
+        <Link to="/shop" className="btn-ghost-gold mt-6 inline-flex">{t("common.browseShop")}</Link>
       </div>
     );
   }
 
-  const handleAdd = () => {
-    addItem(product, qty, color);
-  };
-
+  const handleAdd = () => addItem(product, qty, color);
   const handleBuyNow = () => {
     addItem(product, qty, color);
-    setTimeout(() => {
-      setDrawerOpen(false);
-      navigate("/checkout");
-    }, 100);
+    setTimeout(() => { setDrawerOpen(false); navigate("/checkout"); }, 100);
   };
 
   return (
     <div data-testid="product-detail-page" className="text-white">
       {/* Breadcrumb */}
       <div className="max-w-7xl mx-auto px-6 lg:px-10 pt-8 text-[11px] uppercase tracking-[0.22em] text-white/55 flex items-center gap-2">
-        <Link to="/" className="hover:text-[#D4A53A]">Home</Link>
+        <Link to="/" className="hover:text-[#D4A53A]">{t("nav.home")}</Link>
         <ChevronRight size={12} />
-        <Link to="/shop" className="hover:text-[#D4A53A]">Shop</Link>
+        <Link to="/shop" className="hover:text-[#D4A53A]">{t("nav.shop")}</Link>
         <ChevronRight size={12} />
         {category && (
           <>
-            <Link to={`/shop?category=${category.id}`} className="hover:text-[#D4A53A]">{category.name}</Link>
+            <Link to={`/shop?category=${category.id}`} className="hover:text-[#D4A53A]">{t(`cat.${category.id}`)}</Link>
             <ChevronRight size={12} />
           </>
         )}
@@ -94,7 +90,7 @@ const ProductDetail = () => {
 
         {/* Info */}
         <div className="flex flex-col">
-          <div className="eyebrow mb-3">{category?.name}</div>
+          <div className="eyebrow mb-3">{category && t(`cat.${category.id}`)}</div>
           <h1 data-testid="product-title" className="font-heading font-black text-3xl lg:text-5xl leading-tight">
             {product.name}
           </h1>
@@ -109,30 +105,30 @@ const ProductDetail = () => {
                 />
               ))}
             </div>
-            <span className="text-sm text-white/65">{product.rating} · {product.reviews} reviews</span>
+            <span className="text-sm text-white/65">{product.rating} · {product.reviews} {t("common.reviews")}</span>
             <span className="text-white/20">|</span>
             <span className="text-xs uppercase tracking-[0.22em] text-[#D4A53A]">
-              {product.inStock ? "In stock" : "Sold out"}
+              {product.inStock ? t("common.inStock") : t("common.soldOut")}
             </span>
           </div>
 
           <div className="mt-6 flex items-end gap-3">
             <span data-testid="product-price" className="font-heading font-black text-4xl text-[#D4A53A]">
-              ${product.price.toFixed(2)}
+              {formatPrice(product.price)}
             </span>
-            <span className="text-white/40 text-sm line-through mb-1.5">${(product.price * 1.2).toFixed(2)}</span>
+            <span className="text-white/40 text-sm line-through mb-1.5">{formatPrice(product.price * 1.2)}</span>
           </div>
 
           <p className="text-white/75 leading-relaxed mt-5 max-w-lg">{product.description}</p>
 
-          {/* Specs row */}
+          {/* Specs */}
           <div className="grid grid-cols-2 gap-4 mt-7">
             <div className="border border-[#D4A53A]/20 p-4">
-              <div className="text-[10px] uppercase tracking-[0.22em] text-[#D4A53A] mb-1">Material</div>
+              <div className="text-[10px] uppercase tracking-[0.22em] text-[#D4A53A] mb-1">{t("common.material")}</div>
               <div className="text-white text-sm">{product.material}</div>
             </div>
             <div className="border border-[#D4A53A]/20 p-4">
-              <div className="text-[10px] uppercase tracking-[0.22em] text-[#D4A53A] mb-1">Dimensions</div>
+              <div className="text-[10px] uppercase tracking-[0.22em] text-[#D4A53A] mb-1">{t("common.dimensions")}</div>
               <div className="text-white text-sm">{product.dimensions}</div>
             </div>
           </div>
@@ -140,7 +136,7 @@ const ProductDetail = () => {
           {/* Color */}
           <div className="mt-7">
             <div className="text-[11px] uppercase tracking-[0.28em] text-[#D4A53A] mb-3">
-              Color · <span className="text-white/70">{color}</span>
+              {t("common.color")} · <span className="text-white/70">{color}</span>
             </div>
             <div className="flex flex-wrap gap-2.5">
               {product.colors.map((c) => (
@@ -161,46 +157,28 @@ const ProductDetail = () => {
           {/* Quantity + buttons */}
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <div className="flex items-center border border-[#D4A53A]/40">
-              <button
-                onClick={() => setQty(Math.max(1, qty - 1))}
-                data-testid="product-qty-dec"
-                className="h-12 w-12 flex items-center justify-center text-white hover:text-[#D4A53A]"
-              >
+              <button onClick={() => setQty(Math.max(1, qty - 1))} data-testid="product-qty-dec" className="h-12 w-12 flex items-center justify-center text-white hover:text-[#D4A53A]">
                 <Minus size={14} />
               </button>
               <div className="w-12 text-center text-white" data-testid="product-qty">{qty}</div>
-              <button
-                onClick={() => setQty(qty + 1)}
-                data-testid="product-qty-inc"
-                className="h-12 w-12 flex items-center justify-center text-white hover:text-[#D4A53A]"
-              >
+              <button onClick={() => setQty(qty + 1)} data-testid="product-qty-inc" className="h-12 w-12 flex items-center justify-center text-white hover:text-[#D4A53A]">
                 <Plus size={14} />
               </button>
             </div>
-            <button
-              onClick={handleAdd}
-              disabled={!product.inStock}
-              data-testid="product-add-to-cart"
-              className="btn-gold flex-1 min-w-[180px] justify-center disabled:opacity-40"
-            >
-              <ShoppingBag size={16} /> Add to cart
+            <button onClick={handleAdd} disabled={!product.inStock} data-testid="product-add-to-cart" className="btn-gold flex-1 min-w-[180px] justify-center disabled:opacity-40">
+              <ShoppingBag size={16} /> {t("common.addToCart")}
             </button>
-            <button
-              onClick={handleBuyNow}
-              disabled={!product.inStock}
-              data-testid="product-buy-now"
-              className="btn-ghost-gold flex-1 min-w-[140px] justify-center disabled:opacity-40"
-            >
-              Buy now
+            <button onClick={handleBuyNow} disabled={!product.inStock} data-testid="product-buy-now" className="btn-ghost-gold flex-1 min-w-[140px] justify-center disabled:opacity-40">
+              {t("common.buyNow")}
             </button>
           </div>
 
           {/* Perks */}
           <div className="grid grid-cols-3 gap-3 mt-8 border-t border-[#D4A53A]/15 pt-7">
             {[
-              { icon: Truck, t: "Free ship $75+" },
-              { icon: ShieldCheck, t: "2-yr warranty" },
-              { icon: Repeat, t: "30-day returns" },
+              { icon: Truck, t: t("pd.freeShip") },
+              { icon: ShieldCheck, t: t("pd.warranty") },
+              { icon: Repeat, t: t("pd.returns") },
             ].map((p) => (
               <div key={p.t} className="flex items-center gap-2">
                 <p.icon size={16} className="text-[#D4A53A]" />
@@ -215,19 +193,19 @@ const ProductDetail = () => {
       <section className="max-w-7xl mx-auto px-6 lg:px-10 py-12 border-t border-[#D4A53A]/15">
         <div className="flex flex-wrap gap-8 border-b border-[#D4A53A]/15 mb-8">
           {[
-            { id: "description", l: "Description" },
-            { id: "specs", l: "Specifications" },
-            { id: "reviews", l: `Reviews (${REVIEWS.length})` },
-          ].map((t) => (
+            { id: "description", l: t("pd.description") },
+            { id: "specs", l: t("pd.specs") },
+            { id: "reviews", l: `${t("pd.reviews")} (${REVIEWS.length})` },
+          ].map((tab2) => (
             <button
-              key={t.id}
-              onClick={() => setTab(t.id)}
-              data-testid={`product-tab-${t.id}`}
+              key={tab2.id}
+              onClick={() => setTab(tab2.id)}
+              data-testid={`product-tab-${tab2.id}`}
               className={`pb-4 text-xs uppercase tracking-[0.22em] border-b-2 -mb-px transition ${
-                tab === t.id ? "border-[#D4A53A] text-[#D4A53A]" : "border-transparent text-white/65 hover:text-white"
+                tab === tab2.id ? "border-[#D4A53A] text-[#D4A53A]" : "border-transparent text-white/65 hover:text-white"
               }`}
             >
-              {t.l}
+              {tab2.l}
             </button>
           ))}
         </div>
@@ -235,11 +213,6 @@ const ProductDetail = () => {
         {tab === "description" && (
           <div className="max-w-3xl text-white/80 leading-relaxed space-y-4">
             <p>{product.description}</p>
-            <p>
-              Each piece is printed on calibrated industrial machines, post-processed by hand and
-              finished with a UV-cure satin coat. Color tolerances ±2 ΔE. Layer height varies by material
-              (50–100µ FDM, 25–50µ resin).
-            </p>
           </div>
         )}
 
@@ -250,11 +223,10 @@ const ProductDetail = () => {
                 {[
                   ["Material options", product.materials.join(", ")],
                   ["Available colors", product.colors.join(", ")],
-                  ["Dimensions", product.dimensions],
+                  [t("common.dimensions"), product.dimensions],
                   ["Print technology", product.material === "Resin" ? "MSLA Resin" : "FDM"],
                   ["Layer height", product.material === "Resin" ? "25–50 µ" : "100–200 µ"],
                   ["Finish", "Sanded · UV satin coat"],
-                  ["Lead time", "Ships within 3 business days"],
                 ].map(([k, v]) => (
                   <tr key={k} className="border-b border-[#D4A53A]/10">
                     <td className="py-3 text-[#D4A53A] uppercase tracking-[0.18em] text-xs w-1/3">{k}</td>
@@ -275,7 +247,7 @@ const ProductDetail = () => {
                   <Star key={i} size={14} className="fill-[#D4A53A] text-[#D4A53A]" />
                 ))}
               </div>
-              <p className="text-white/65 text-sm mt-2">Based on {product.reviews} reviews.</p>
+              <p className="text-white/65 text-sm mt-2">{product.reviews} {t("common.reviews")}.</p>
             </div>
             <div className="lg:col-span-2 space-y-5">
               {REVIEWS.map((r) => (
@@ -287,11 +259,7 @@ const ProductDetail = () => {
                     </div>
                     <div className="flex items-center gap-1">
                       {Array.from({ length: 5 }).map((_, i) => (
-                        <Star
-                          key={i}
-                          size={12}
-                          className={i < r.rating ? "fill-[#D4A53A] text-[#D4A53A]" : "text-white/25"}
-                        />
+                        <Star key={i} size={12} className={i < r.rating ? "fill-[#D4A53A] text-[#D4A53A]" : "text-white/25"} />
                       ))}
                     </div>
                   </div>
@@ -308,9 +276,9 @@ const ProductDetail = () => {
       {related.length > 0 && (
         <section className="max-w-7xl mx-auto px-6 lg:px-10 py-12">
           <div className="flex items-end justify-between mb-10">
-            <h2 className="font-heading font-black text-2xl lg:text-4xl text-white">You may also like</h2>
+            <h2 className="font-heading font-black text-2xl lg:text-4xl text-white">{t("pd.youMayLike")}</h2>
             <Link to="/shop" className="text-sm uppercase tracking-[0.22em] text-[#D4A53A] hover:text-white">
-              Shop all
+              {t("common.shopAll")}
             </Link>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

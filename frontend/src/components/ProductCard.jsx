@@ -2,12 +2,14 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Star, ShoppingBag } from "lucide-react";
 import { useCart } from "../context/CartContext";
+import { useLocale } from "../context/LocaleContext";
 import { COLORS } from "../data/products";
 
 const hexFor = (name) => COLORS.find((c) => c.name === name)?.hex || "#D4A53A";
 
 export const ProductCard = ({ product }) => {
   const { addItem } = useCart();
+  const { t, formatPrice } = useLocale();
 
   return (
     <div
@@ -25,17 +27,17 @@ export const ProductCard = ({ product }) => {
         <div className="absolute top-3 left-3 flex flex-col gap-2">
           {product.new && (
             <span className="bg-[#D4A53A] text-[#0A2A2B] text-[10px] font-bold uppercase tracking-[0.2em] px-2.5 py-1">
-              New
+              {t("common.new")}
             </span>
           )}
           {product.bestSeller && (
             <span className="bg-black/60 backdrop-blur-md border border-[#D4A53A]/30 text-white text-[10px] uppercase tracking-[0.2em] px-2.5 py-1">
-              Bestseller
+              {t("common.bestseller")}
             </span>
           )}
           {!product.inStock && (
             <span className="bg-black/70 text-white/80 text-[10px] uppercase tracking-[0.2em] px-2.5 py-1">
-              Sold out
+              {t("common.soldOut")}
             </span>
           )}
         </div>
@@ -47,7 +49,7 @@ export const ProductCard = ({ product }) => {
 
       <div className="p-5 flex flex-col flex-1">
         <div className="text-[10px] uppercase tracking-[0.28em] text-[#D4A53A]/90 mb-2">
-          {product.category.replace(/-/g, " ")}
+          {t(`cat.${product.category}`)}
         </div>
         <Link
           to={`/product/${product.id}`}
@@ -59,7 +61,7 @@ export const ProductCard = ({ product }) => {
 
         <div className="flex items-center gap-3 mt-3 text-xs text-white/60">
           <span className="border border-[#D4A53A]/30 px-2 py-0.5">{product.material}</span>
-          <span>{product.reviews} reviews</span>
+          <span>{product.reviews} {t("common.reviews")}</span>
         </div>
 
         <div className="flex items-center gap-1.5 mt-4">
@@ -78,7 +80,7 @@ export const ProductCard = ({ product }) => {
 
         <div className="flex items-end justify-between mt-5">
           <div className="text-[#D4A53A] font-heading font-bold text-xl">
-            ${product.price.toFixed(2)}
+            {formatPrice(product.price)}
           </div>
           <button
             data-testid={`add-to-cart-${product.id}`}
@@ -87,7 +89,7 @@ export const ProductCard = ({ product }) => {
             className="flex items-center gap-2 text-[11px] uppercase tracking-[0.18em] font-bold text-[#0A2A2B] bg-[#D4A53A] hover:bg-[#C9A249] px-4 py-2.5 transition disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <ShoppingBag size={13} />
-            Add
+            {t("common.add")}
           </button>
         </div>
       </div>

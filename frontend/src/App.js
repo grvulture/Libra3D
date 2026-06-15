@@ -2,6 +2,7 @@ import React from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "./context/CartContext";
+import { LocaleProvider } from "./context/LocaleContext";
 import { Layout } from "./components/Layout";
 import Home from "./pages/Home";
 import Shop from "./pages/Shop";
@@ -17,7 +18,8 @@ import { Toaster } from "sonner";
 function App() {
   return (
     <div className="App">
-      <CartProvider>
+      <LocaleProvider>
+        <CartProvider>
         <BrowserRouter>
           <Routes>
             <Route element={<Layout />}>
@@ -45,7 +47,8 @@ function App() {
             },
           }}
         />
-      </CartProvider>
+        </CartProvider>
+      </LocaleProvider>
     </div>
   );
 }

@@ -1,0 +1,33 @@
+{
+  "summary": "Frontend-only locale + currency switcher testing. Live switching (GR<->EN, EUR<->USD), translations on all pages (Home/Shop/Cart/Checkout/Custom-Orders/Contact/Admin), price conversion (38 EUR -> $41.04), Greek number formatting ('38,00 €'), shop price-filter currency symbol updates, mobile menu integration — ALL PASS. Critical bug: locale/currency choice does NOT persist across page reload (localStorage gets overwritten with defaults on mount).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {
+        "component": "LocaleContext (LocaleProvider)",
+        "issue": "Locale & currency choice does NOT persist across page reload. After user switches to EN+USD via UI (or via direct localStorage write) and reloads, the persist useEffect runs first with default state (el/EUR) and overwrites localStorage BEFORE the load useEffect can apply saved values. With React StrictMode double-invocation, the load effect's second run reads the already-overwritten defaults. Result: localStorage ends up {lang:'el',currency:'EUR'} and UI reverts to Greek+EUR on every reload. This directly fails the persistence acceptance criteria.",
+        "selector": "/app/frontend/src/context/LocaleContext.jsx (lines 25-51)",
+        "priority": "CRITICAL"
+      }
+    ],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Fix LocaleContext persistence race: use a lazy useState initializer that synchronously reads localStorage on first render (and drop the separate 'load' useEffect). Example: useState(() => { try { const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); return TRANSLATIONS[saved.lang] ? saved.lang : 'el'; } catch { return 'el'; } }). Apply same pattern to currency. The persist useEffect can remain as-is — it will then only write authentic state, never stale defaults."
+  ],
+  "critical_code_review_comments": [
+    "LocaleContext: two-effect load/persist pattern is inherently racy under React 18 StrictMode. Replace with lazy useState initializer (synchronous read).",
+    "LocaleSwitcher panel auto-closes only on outside click; clicking a language option keeps panel open which is acceptable UX. No issue.",
+    "All data-testids requested in spec are present (locale-switcher-btn, locale-switcher-panel, locale-lang-en/el, locale-currency-EUR/USD)."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (skipped)", "frontend": "92% (12/13 spec items pass; persistence reload fails)"},
+  "test_credentials": "none required",
+  "seed_data_creation": "none",
+  "retest_needed": true,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Verified passing: (1) default GR+EUR on first visit, (2) switcher button + panel + all 4 testid options visible, (3) UI lang switch GR<->EN re-renders nav/hero/buttons immediately, (4) currency USD conversion (38 EUR -> $41.04 confirmed, $12.96/$9.72/$25.92 also confirmed) including cart and admin revenue, (5) switch back GR+EUR restores fully, (6) cart drawer GR title 'Το Καλάθι σου' with '38,00\\u00a0€' Greek formatting, (7) checkout GR labels all present (Ολοκλήρωση Παραγγελίας, Στοιχεία επικοινωνίας, Διεύθυνση αποστολής, Πληρωμή, ΦΠΑ, Ελλάδα default country), Greek validation toast 'Συμπλήρωσε τα υποχρεωτικά πεδία αποστολής.' on empty submit, (8) custom-orders page (route /custom-orders, NOT /custom) GR title 'Custom 3D Εκτύπωση' + Greek validation toast, (9) contact page GR title 'Επικοινώνησε μαζί μας', (10) admin page Greek (Studio Console, Παραγγελίες, Προϊόντα) with € formatting and switches to $ on currency change, (11) shop sidebar GR filter labels and price-filter title currency symbol switches between (€) and ($), (12) mobile menu (lg:hidden nav-mobile-toggle) reveals locale switcher (1 visible after open), (13) zero console errors during locale/currency switching. FAILED: persistence across reload — localStorage ends up reset to {lang:'el',currency:'EUR'} regardless of what user selected.",
+  "rca of the issue": "Race condition in /app/frontend/src/context/LocaleContext.jsx between two useEffects. Effect 1 (deps []) reads localStorage and calls setLang/setCurrency. Effect 2 (deps [lang,currency]) persists current state. On initial mount both run in same commit with stale default state ('el','EUR'); Effect 2 writes defaults to localStorage. Under React StrictMode, effects mount->unmount->mount, and Effect 1's second invocation now reads the just-overwritten defaults, so its setState is a no-op. Net result: any preexisting or just-written user preference is wiped on reload. Reproduction: open site, switch to EN+USD via UI, F5/reload, observe nav reverts to Greek and localStorage value is {\\\"lang\\\":\\\"el\\\",\\\"currency\\\":\\\"EUR\\\"}. Mitigation: replace the load useEffect with a lazy useState initializer so the saved value becomes the initial state — no race possible."
+}
