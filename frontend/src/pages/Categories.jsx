@@ -20,10 +20,13 @@ const Categories = () => {
 
       <section className="max-w-7xl mx-auto px-6 lg:px-10 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {CATEGORIES.map((c, i) => (
+          {CATEGORIES.map((c, i) => {
+            const isCustom = c.id === "custom-prints";
+            const linkTo = isCustom ? "/custom-orders" : `/shop?category=${c.id}`;
+            return (
             <Link
               key={c.id}
-              to={`/shop?category=${c.id}`}
+              to={linkTo}
               data-testid={`category-card-${c.id}`}
               className={`group relative overflow-hidden border border-[#D4A53A]/15 hover:border-[#D4A53A]/60 transition-all duration-500 ${
                 i === 0 ? "lg:col-span-2 lg:row-span-2 aspect-square lg:aspect-auto" : "aspect-[4/5]"
@@ -50,7 +53,8 @@ const Categories = () => {
                 <p className="text-white/75 text-sm mt-2 max-w-md">{c.blurb}</p>
               </div>
             </Link>
-          ))}
+            );
+          })}
         </div>
       </section>
     </div>
