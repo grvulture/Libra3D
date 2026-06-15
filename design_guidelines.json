@@ -1,0 +1,182 @@
+{
+  "theme": "dark",
+  "archetype": "5 (Luxury / Premium Industrial)",
+  "colors": {
+    "background": {
+      "default": "#0E5A5C",
+      "paper": "#0F5E60",
+      "dark": "#0A4143"
+    },
+    "primary": {
+      "default": "#D4A53A",
+      "hover": "#C9A249",
+      "foreground": "#000000"
+    },
+    "text": {
+      "primary": "#FFFFFF",
+      "secondary": "#E0E0E0",
+      "muted": "#A0B5B6"
+    },
+    "border": {
+      "default": "rgba(212, 165, 58, 0.2)",
+      "hover": "rgba(212, 165, 58, 0.5)"
+    }
+  },
+  "typography": {
+    "font_family": {
+      "heading": "'Cabinet Grotesk', sans-serif",
+      "body": "'Outfit', sans-serif"
+    },
+    "hierarchy": {
+      "h1": "text-5xl lg:text-6xl font-black tracking-tighter text-white",
+      "h2": "text-3xl lg:text-4xl font-bold tracking-tight text-white",
+      "h3": "text-xl lg:text-2xl font-bold tracking-tight text-white",
+      "body": "text-base leading-relaxed text-gray-200",
+      "label": "text-sm uppercase tracking-[0.2em] text-[#D4A53A]"
+    },
+    "imports": [
+      "@import url('https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@900,800,700,500,400&display=swap');",
+      "@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');"
+    ]
+  },
+  "spacing_and_layout": {
+    "container": "max-w-7xl mx-auto px-6 lg:px-12",
+    "section_padding": "py-20 lg:py-32",
+    "grid_system": {
+      "bento": "grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6",
+      "shop": "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
+    }
+  },
+  "components": {
+    "header": {
+      "style": "sticky top-0 z-50 backdrop-blur-xl bg-[#0E5A5C]/80 border-b border-[#D4A53A]/20 transition-all duration-300",
+      "logo": "h-12 w-auto object-contain",
+      "nav_links": "text-sm uppercase tracking-wider text-white hover:text-[#D4A53A] transition-colors"
+    },
+    "button": {
+      "primary": "bg-[#D4A53A] text-black font-bold uppercase tracking-wider px-8 py-4 hover:bg-[#C9A249] hover:shadow-[0_0_20px_rgba(212,165,58,0.4)] transition-all duration-300 rounded-none border border-[#D4A53A]",
+      "secondary": "bg-transparent text-[#D4A53A] font-bold uppercase tracking-wider px-8 py-4 border border-[#D4A53A]/50 hover:border-[#D4A53A] hover:bg-[#D4A53A]/10 transition-all duration-300 rounded-none"
+    },
+    "product_card": {
+      "container": "group relative bg-[#0F5E60] border border-[#D4A53A]/10 hover:border-[#D4A53A]/50 transition-all duration-500 overflow-hidden rounded-none flex flex-col h-full",
+      "image_wrapper": "relative aspect-[4/5] overflow-hidden bg-[#0A4143]",
+      "image": "object-cover w-full h-full group-hover:scale-105 transition-transform duration-700",
+      "content": "p-6 flex flex-col flex-1",
+      "title": "text-lg font-bold text-white mb-2 font-heading",
+      "price": "text-[#D4A53A] font-medium text-lg mt-auto",
+      "badge": "absolute top-4 left-4 bg-black/60 backdrop-blur-md border border-[#D4A53A]/30 text-white text-xs uppercase tracking-wider px-3 py-1"
+    },
+    "filter_sidebar": {
+      "container": "w-full lg:w-64 flex-shrink-0 space-y-8",
+      "section_title": "text-sm uppercase tracking-[0.2em] text-[#D4A53A] mb-4 border-b border-[#D4A53A]/20 pb-2",
+      "checkbox_label": "flex items-center space-x-3 text-gray-300 hover:text-white cursor-pointer text-sm"
+    },
+    "cart_drawer": {
+      "container": "fixed inset-y-0 right-0 w-full max-w-md bg-[#0A4143] border-l border-[#D4A53A]/20 shadow-2xl z-50 flex flex-col",
+      "header": "p-6 border-b border-[#D4A53A]/20 flex justify-between items-center",
+      "body": "flex-1 overflow-y-auto p-6 space-y-6",
+      "footer": "p-6 border-t border-[#D4A53A]/20 bg-[#0E5A5C] flex flex-col gap-4"
+    },
+    "admin_dashboard": {
+      "card": "bg-[#0F5E60] border border-[#D4A53A]/20 p-6 rounded-none shadow-lg",
+      "table": "w-full text-left border-collapse",
+      "th": "pb-4 text-xs uppercase tracking-wider text-[#D4A53A] border-b border-[#D4A53A]/20",
+      "td": "py-4 text-sm text-gray-200 border-b border-[#D4A53A]/10"
+    }
+  },
+  "media": {
+    "logos": [
+      {
+        "category": "header_logo",
+        "url": "https://customer-assets.emergentagent.com/job_da83cff4-2ef6-43de-8704-8f305603e548/artifacts/nu8in5om_Logo-petrol.jpg",
+        "description": "Square logo for nav and footer"
+      }
+    ],
+    "hero": [
+      {
+        "category": "hero_background",
+        "url": "https://customer-assets.emergentagent.com/job_da83cff4-2ef6-43de-8704-8f305603e548/artifacts/jabjxu1c_Header-petrol.jpg",
+        "description": "Main hero banner image for homepage top"
+      }
+    ],
+    "products": [
+      {
+        "category": "product_image",
+        "url": "https://images.pexels.com/photos/34165104/pexels-photo-34165104.png?auto=compress&cs=tinysrgb&w=800",
+        "description": "Abstract teal geometric shape representing a 3D printed object (Geometric Plant Pot / Desktop Accessory)"
+      },
+      {
+        "category": "product_image",
+        "url": "https://images.pexels.com/photos/33797646/pexels-photo-33797646.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "description": "Abstract purple/teal layered 3D curves representing a 3D printed object (Wall Art / Complex Print)"
+      }
+    ]
+  },
+  "pages": {
+    "homepage": {
+      "sections": [
+        "Hero: Full-width background image using hero_background URL. Overlay with bg-[#0E5A5C]/40 to ensure text legibility. H1: 'Shop Unique 3D Printed Products'. Subtext: 'Functional, decorative, and custom 3D printed items crafted with precision.' Two buttons: Primary 'Shop Products', Secondary 'Request Custom Print'.",
+        "Featured Categories: Bento grid of 7 categories (Home Decor, Desk Accessories, Miniatures & Models, Replacement Parts, Tools & Gadgets, Gifts, Custom Prints) with dark petrol cards and gold hover borders.",
+        "Best Sellers: Horizontal scroll or 4-col grid of product_card components featuring 4 top products.",
+        "About/Value Props: 3-column section (Precision, Quality, Customization) using gold lucide-react icons."
+      ]
+    },
+    "shop": {
+      "sections": [
+        "Page Header: 'Marketplace' with subtext.",
+        "Main Layout: 2-column. Left: filter_sidebar (Category, Material, Price Range, Color, Availability, Rating). Right: shop grid.",
+        "Controls: Top bar for 'Sort By' dropdown (Newest, Best Selling, Price Low→High, High→Low)."
+      ]
+    },
+    "product_detail": {
+      "sections": [
+        "Product Stage: Split 50/50. Left: Image gallery (large main image + thumbnails). Right: Product info (Title, Rating, Price, Material badge, Color swatches, Qty selector, Add to Cart).",
+        "Description & Specs: Text block for Description, Material, Dimensions.",
+        "Related Products: 4-col grid at bottom."
+      ]
+    },
+    "custom_orders": {
+      "sections": [
+        "Header: 'Request a Custom 3D Print'.",
+        "Form Section: 2-column layout inside a massive admin_dashboard style card. Left: Instructions & file requirements. Right: Form fields (Name, Email, Phone, Product Idea, Material, Color, Quantity, File Upload placeholder, Message, Submit Custom Request button)."
+      ]
+    },
+    "cart_checkout": {
+      "sections": [
+        "Cart Drawer: slide-in from right, qty controls, subtotal, shipping estimate, checkout button.",
+        "Checkout Form: Simple placeholder checkout form with customer details + payment placeholder."
+      ]
+    },
+    "admin_dashboard": {
+      "sections": [
+        "Top Nav: Admin user profile, quick stats.",
+        "Stats Row: 4 admin_dashboard cards (Revenue, Orders, Products, Pending Requests).",
+        "Main Content: 2-col. Left: Recent Orders & Products table. Right: Pending Custom Requests list. Add new product button."
+      ]
+    },
+    "footer": {
+      "sections": [
+        "Footer: logo (square), quick links, contact placeholders, social icons, brand description. Use dark background #0A4143."
+      ]
+    }
+  },
+  "microinteractions": {
+    "hover_effects": "Buttons glow with gold shadow on hover. Cards scale image slightly and fade in a gold border. Nav links have a gold underline animation on hover.",
+    "page_transitions": "Fade in on load using Framer Motion.",
+    "cart_drawer": "Slide in from right edge with a backdrop blur overlay on the main content."
+  },
+  "testing": {
+    "required_attributes": "All interactive and key informational elements MUST include a 'data-testid' attribute (e.g., 'data-testid=\"nav-shop-link\"', 'data-testid=\"add-to-cart-button\"')."
+  },
+  "instructions_to_main_agent": [
+    "Install and use 'lucide-react' for all icons. Ensure stroke colors match the gold/teal theme.",
+    "Use 'framer-motion' for cart drawer slide-in, page transitions, and hover microinteractions.",
+    "Strictly adhere to the color palette. Backgrounds MUST be #0E5A5C, #0F5E60, or #0A4143. Accents MUST be #D4A53A.",
+    "Inject the font imports for Cabinet Grotesk and Outfit in the global CSS (index.css). Set body font to Outfit and heading font to Cabinet Grotesk.",
+    "Populate the product shop with at least 8 mocked products (Geometric Plant Pot, Cable Organizer Clips, Custom Keychain, Miniature Dragon Figure, Replacement Knob, Desk Phone Stand, Wall Art Panel, Tool Holder) utilizing the provided product_image URLs interchangeably.",
+    "The header logo MUST use the exact URL provided in media.logos.header_logo.",
+    "The homepage hero MUST use the exact URL provided in media.hero.hero_background as the background image.",
+    "Implement the UI using plain HTML/Tailwind for main structure, and Shadcn UI for complex interactives (Select, Tabs, Dialogs) but heavily override Shadcn styles to remove border-radius (rounded-none) and apply the dark petrol/gold theme.",
+    "Do NOT use 'Inter', 'Roboto', or 'Space Grotesk' fonts as requested by the user."
+  ]
+}
