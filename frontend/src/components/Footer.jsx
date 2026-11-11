@@ -64,7 +64,7 @@ export const Footer = () => {
           <ul className="space-y-4 text-sm text-white/80">
             <li className="flex items-start gap-3">
               <MapPin size={16} className="text-[#D4A53A] mt-0.5" />
-              <span>Λεωφ. Συγγρού 134 · Studio Β<br/>Αθήνα · Ελλάδα</span>
+              <span>Στασινοπουλου 18<br />Αγιος Δημητριος</span>
             </li>
             <li className="flex items-center gap-3">
               <Mail size={16} className="text-[#D4A53A]" />
@@ -72,7 +72,7 @@ export const Footer = () => {
             </li>
             <li className="flex items-center gap-3">
               <Phone size={16} className="text-[#D4A53A]" />
-              <span>+30 210 1234 567</span>
+              <span>+30 69 8586 8284</span>
             </li>
           </ul>
         </div>

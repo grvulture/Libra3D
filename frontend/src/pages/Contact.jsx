@@ -32,8 +32,8 @@ const Contact = () => {
         <aside className="lg:col-span-4 space-y-5">
           {[
             { icon: Mail, t: t("contact.emailLabel"), v: "hello@libra3d.gr" },
-            { icon: Phone, t: t("contact.phoneLabel"), v: "+30 210 1234 567" },
-            { icon: MapPin, t: t("contact.studioLabel"), v: "Λεωφ. Συγγρού 134 · Studio Β\nΑθήνα · Ελλάδα" },
+            { icon: Phone, t: t("contact.phoneLabel"), v: "+30 69 8586 8284" },
+            { icon: MapPin, t: t("contact.studioLabel"), v: (<>Στασινοπουλου 18<br />Αγιος Δημητριος</>) },
             { icon: MessageSquare, t: t("contact.chatLabel"), v: t("contact.chatValue") },
           ].map((c) => (
             <div key={c.t} className="border border-[#D4A53A]/20 p-6 bg-[#0F5E60] flex gap-5">
