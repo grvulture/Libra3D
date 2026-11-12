@@ -1,12 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
-import { CATEGORIES, PRODUCTS } from "../data/products";
+import { CATEGORIES } from "../data/products";
+import { useProducts } from "../hooks/useProducts";
 import { useLocale } from "../context/LocaleContext";
 
 const Categories = () => {
   const { t } = useLocale();
-  const countFor = (id) => PRODUCTS.filter((p) => p.category === id).length;
+  const { data: products = [], isLoading, isError, error, refetch } = useProducts();
+  const countFor = (id) => (products || []).filter((p) => p.category === id).length;
 
   return (
     <div data-testid="categories-page" className="text-white">
@@ -18,6 +20,13 @@ const Categories = () => {
         </div>
       </section>
 
+      {isLoading && <div data-testid="products-loading" className="max-w-7xl mx-auto px-6 lg:px-10 py-6 text-white/70">Loading products…</div>}
+      {isError && (
+        <div data-testid="products-error" className="max-w-7xl mx-auto px-6 lg:px-10 py-6 text-white/70">
+          Could not load products. {error?.message}
+          <button onClick={() => refetch()} className="ml-3 text-[#D4A53A] underline">Retry</button>
+        </div>
+      )}
       <section className="max-w-7xl mx-auto px-6 lg:px-10 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {CATEGORIES.map((c, i) => {

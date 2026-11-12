@@ -1,14 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Sparkles, Layers, Wand2, Star } from "lucide-react";
-import { BRAND, PRODUCTS, CATEGORIES } from "../data/products";
+import { BRAND, CATEGORIES } from "../data/products";
+import { useProducts } from "../hooks/useProducts";
 import { ProductCard } from "../components/ProductCard";
 import { useLocale } from "../context/LocaleContext";
 
 const Home = () => {
   const { t, formatPrice } = useLocale();
-  const featured = PRODUCTS.filter((p) => p.bestSeller).slice(0, 4);
-  const fresh = PRODUCTS.filter((p) => p.new).slice(0, 3);
+  const { data: products, isLoading, isError, error, refetch } = useProducts();
+  const featured = (products || []).filter((p) => p.bestSeller).slice(0, 4);
+  const fresh = (products || []).filter((p) => p.new).slice(0, 3);
 
   return (
     <div data-testid="home-page" className="text-white">
@@ -144,6 +146,13 @@ const Home = () => {
           </Link>
         </div>
 
+        {isLoading && <div data-testid="products-loading" className="text-white/70">Loading products…</div>}
+        {isError && (
+          <div data-testid="products-error" className="text-white/70">
+            Could not load products. {error?.message}
+            <button onClick={() => refetch()} className="ml-3 text-[#D4A53A] underline">Retry</button>
+          </div>
+        )}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {featured.map((p) => (
             <ProductCard key={p.id} product={p} />
@@ -226,6 +235,13 @@ const Home = () => {
             {t("common.viewAll")} <ArrowRight size={14} />
           </Link>
         </div>
+        {isLoading && <div data-testid="products-loading" className="text-white/70">Loading products…</div>}
+        {isError && (
+          <div data-testid="products-error" className="text-white/70">
+            Could not load products. {error?.message}
+            <button onClick={() => refetch()} className="ml-3 text-[#D4A53A] underline">Retry</button>
+          </div>
+        )}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {fresh.map((p) => (
             <ProductCard key={p.id} product={p} />

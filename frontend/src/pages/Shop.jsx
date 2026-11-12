@@ -1,7 +1,8 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { SlidersHorizontal, X, ChevronDown, Star } from "lucide-react";
-import { PRODUCTS, CATEGORIES, MATERIALS, COLORS } from "../data/products";
+import { CATEGORIES, MATERIALS, COLORS } from "../data/products";
+import { useProducts } from "../hooks/useProducts";
 import { ProductCard } from "../components/ProductCard";
 import { useLocale } from "../context/LocaleContext";
 
@@ -14,6 +15,7 @@ const SORT_KEYS = [
 
 const Shop = () => {
   const { t, formatPrice, symbol } = useLocale();
+  const { data: products = [], isLoading, isError, error, refetch } = useProducts();
   const [params, setParams] = useSearchParams();
   const initialCat = params.get("category") || "all";
 
@@ -35,7 +37,7 @@ const Shop = () => {
   };
 
   const filtered = useMemo(() => {
-    let list = [...PRODUCTS];
+    let list = [...products];
     if (category !== "all") list = list.filter((p) => p.category === category);
     if (materials.length) list = list.filter((p) => materials.includes(p.material));
     if (colors.length) list = list.filter((p) => p.colors.some((c) => colors.includes(c)));
@@ -49,7 +51,7 @@ const Shop = () => {
     else if (sort === "best") list.sort((a, b) => b.reviews - a.reviews);
     else if (sort === "newest") list.sort((a, b) => Number(b.new) - Number(a.new));
     return list;
-  }, [category, materials, colors, price, availability, minRating, sort]);
+  }, [products, category, materials, colors, price, availability, minRating, sort]);
 
   const clearAll = () => {
     setCategory("all");
@@ -69,7 +71,7 @@ const Shop = () => {
           <div className="eyebrow mb-4">{t("shop.eyebrow")}</div>
           <h1 className="font-heading font-black text-4xl lg:text-6xl">{t("shop.title")}</h1>
           <p className="text-white/70 mt-3 max-w-2xl">
-            {t("shop.subtitle", { count: PRODUCTS.length })}
+            {t("shop.subtitle", { count: products.length })}
           </p>
         </div>
       </section>
@@ -138,7 +140,14 @@ const Shop = () => {
 
           {/* Grid */}
           <div className="flex-1 min-w-0">
-            {filtered.length === 0 ? (
+            {isLoading && <div data-testid="products-loading" className="text-white/70 p-6">Loading products…</div>}
+            {isError && (
+              <div data-testid="products-error" className="border border-[#D4A53A]/20 p-12 text-center">
+                <p className="text-white/70">Could not load products. {error?.message}</p>
+                <button onClick={() => refetch()} className="btn-ghost-gold mt-6">Retry</button>
+              </div>
+            )}
+            {!isLoading && !isError && filtered.length === 0 ? (
               <div className="border border-[#D4A53A]/20 p-12 text-center">
                 <p className="text-white/70">{t("shop.noResults")}</p>
                 <button onClick={clearAll} className="btn-ghost-gold mt-6">{t("shop.filter.clear")}</button>

@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useMemo, useCallback, useEffect } from "react";
 
 const CartContext = createContext(null);
-const STORAGE_KEY = "libra3d_cart_v1";
+const STORAGE_KEY = "3dlibra_cart_v1";
 
 export const useCart = () => useContext(CartContext);
 

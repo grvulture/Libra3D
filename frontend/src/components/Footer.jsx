@@ -64,11 +64,11 @@ export const Footer = () => {
           <ul className="space-y-4 text-sm text-white/80">
             <li className="flex items-start gap-3">
               <MapPin size={16} className="text-[#D4A53A] mt-0.5" />
-              <span>Στασινοπουλου 18<br />Αγιος Δημητριος</span>
+              <span className="whitespace-pre-line">{t("footer.address")}</span>
             </li>
             <li className="flex items-center gap-3">
               <Mail size={16} className="text-[#D4A53A]" />
-              <a href="mailto:hello@libra3d.gr" className="hover:text-[#D4A53A]">hello@libra3d.gr</a>
+              <a href="mailto:info@3dlibra.gr" className="hover:text-[#D4A53A]">info@3dlibra.gr</a>
             </li>
             <li className="flex items-center gap-3">
               <Phone size={16} className="text-[#D4A53A]" />

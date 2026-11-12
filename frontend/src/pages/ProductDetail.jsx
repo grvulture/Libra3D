@@ -1,7 +1,8 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Star, Minus, Plus, ShoppingBag, ShieldCheck, Truck, Repeat, ChevronRight } from "lucide-react";
-import { PRODUCTS, COLORS, REVIEWS, CATEGORIES } from "../data/products";
+import { COLORS, REVIEWS, CATEGORIES } from "../data/products";
+import { useProducts } from "../hooks/useProducts";
 import { useCart } from "../context/CartContext";
 import { useLocale } from "../context/LocaleContext";
 import { ProductCard } from "../components/ProductCard";
@@ -10,23 +11,47 @@ const hexFor = (name) => COLORS.find((c) => c.name === name)?.hex || "#D4A53A";
 
 const ProductDetail = () => {
   const { id } = useParams();
-  const product = PRODUCTS.find((p) => p.id === id);
+  const { data: products, isLoading, isError, error, refetch } = useProducts();
+  const product = (products || []).find((p) => p.id === id);
   const navigate = useNavigate();
   const { addItem, setDrawerOpen } = useCart();
   const { t, formatPrice } = useLocale();
   const [activeImg, setActiveImg] = useState(0);
   const [qty, setQty] = useState(1);
-  const [color, setColor] = useState(product?.colors[0]);
+  const [color, setColor] = useState(null);
   const [tab, setTab] = useState("description");
 
   const category = useMemo(
     () => CATEGORIES.find((c) => c.id === product?.category),
     [product]
   );
+  const firstColor = product?.colors?.[0] ?? null;
   const related = useMemo(
-    () => PRODUCTS.filter((p) => p.category === product?.category && p.id !== product?.id).slice(0, 4),
-    [product]
+    () => (products || []).filter((p) => p.category === product?.category && p.id !== product?.id).slice(0, 4),
+    [products, product]
   );
+
+  useEffect(() => {
+    setColor(firstColor);
+  }, [id, firstColor]);
+
+  if (isLoading) {
+    return (
+      <div className="max-w-7xl mx-auto px-6 lg:px-10 py-32 text-center text-white">
+        <h2 className="font-heading text-3xl">Loading product…</h2>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="max-w-7xl mx-auto px-6 lg:px-10 py-32 text-center text-white">
+        <h2 className="font-heading text-3xl">Could not load product</h2>
+        <p className="text-white/70 mt-3">{error?.message}</p>
+        <button onClick={() => refetch()} className="btn-ghost-gold mt-6 inline-flex">Retry</button>
+      </div>
+    );
+  }
 
   if (!product) {
     return (

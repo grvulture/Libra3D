@@ -1,13 +1,20 @@
 import React from "react";
+import { Link, useLocation } from "react-router-dom";
 import { DollarSign, Package, ShoppingCart, ClipboardList, Plus, TrendingUp, ArrowUpRight, Eye } from "lucide-react";
-import { PRODUCTS, ADMIN_ORDERS, ADMIN_REQUESTS, BRAND } from "../data/products";
+import { ADMIN_ORDERS, ADMIN_REQUESTS, BRAND } from "../data/products";
+import { useProducts } from "../hooks/useProducts";
+import { useAuth } from "../context/AuthContext";
 import { useLocale } from "../context/LocaleContext";
 
 const Admin = () => {
+  const location = useLocation();
   const { t, formatPrice } = useLocale();
+  const { user } = useAuth();
+  const { data: products = [] } = useProducts();
+  const isAdmin = user?.role === "admin";
   const revenue = 24180; // EUR base
   const orders = ADMIN_ORDERS.length + 184;
-  const productCount = PRODUCTS.length;
+  const productCount = products.length;
   const requests = ADMIN_REQUESTS.length;
 
   return (
@@ -19,20 +26,35 @@ const Admin = () => {
             <div>
               <div className="eyebrow">{t("admin.eyebrow")}</div>
               <h1 className="font-heading font-black text-2xl lg:text-3xl">{t("admin.title")}</h1>
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mt-3">
+                {isAdmin && (
+                  <Link to="/admin/products" className="text-sm uppercase tracking-[0.22em] text-[#D4A53A] py-1">{t("admin.manageProducts")}</Link>
+                )}
+                {isAdmin && (
+                  <Link to="/admin/orders" className="text-sm uppercase tracking-[0.22em] text-[#D4A53A] py-1">{t("admin.manageOrders")}</Link>
+                )}
+                <Link to="/account/password" state={{ from: location.pathname }} className="text-sm uppercase tracking-[0.22em] text-[#D4A53A] py-1">{t("admin.changePassword")}</Link>
+              </div>
             </div>
           </div>
-          <button className="btn-gold" data-testid="admin-add-product">
-            <Plus size={14} /> {t("admin.addProduct")}
-          </button>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+            <Link to="/admin/tickets" className="btn-ghost-gold" data-testid="admin-inbox">{t("admin.inbox")}</Link>
+            {isAdmin && (
+              <Link to="/admin/products/new" className="btn-gold" data-testid="admin-add-product">
+                <Plus size={14} /> {t("admin.addProduct")}
+              </Link>
+            )}
+          </div>
         </div>
       </section>
 
+      {isAdmin && (
       <section className="max-w-7xl mx-auto px-6 lg:px-10 py-10 grid grid-cols-2 lg:grid-cols-4 gap-5">
         {[
           { k: t("admin.stat.revenue"), v: formatPrice(revenue, { fractionDigits: 0 }), d: "+12.4%", icon: DollarSign },
           { k: t("admin.stat.orders"), v: orders.toLocaleString(), d: "+5.1%", icon: ShoppingCart },
-          { k: t("admin.stat.products"), v: productCount.toString(), d: "Live", icon: Package },
-          { k: t("admin.stat.requests"), v: requests.toString(), d: "Action needed", icon: ClipboardList },
+          { k: t("admin.stat.products"), v: productCount.toString(), d: t("admin.stat.live"), icon: Package },
+          { k: t("admin.stat.requests"), v: requests.toString(), d: t("admin.stat.actionNeeded"), icon: ClipboardList },
         ].map((s) => (
           <div key={s.k} className="border border-[#D4A53A]/20 bg-[#0F5E60] p-6 relative overflow-hidden" data-testid={`admin-stat-${s.k}`}>
             <div className="flex items-center justify-between">
@@ -47,6 +69,8 @@ const Admin = () => {
         ))}
       </section>
 
+      )}
+      {isAdmin && (
       <section className="max-w-7xl mx-auto px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div className="lg:col-span-8 border border-[#D4A53A]/20 bg-[#0F5E60] p-6">
           <div className="flex items-center justify-between mb-5">
@@ -69,7 +93,7 @@ const Admin = () => {
         <div className="lg:col-span-4 border border-[#D4A53A]/20 bg-[#0F5E60] p-6">
           <div className="eyebrow mb-5">{t("admin.topSellers")}</div>
           <ul className="space-y-4">
-            {PRODUCTS.filter((p) => p.bestSeller).slice(0, 4).map((p, i) => (
+            {(products || []).filter((p) => p.bestSeller).slice(0, 4).map((p, i) => (
               <li key={p.id} className="flex items-center gap-3">
                 <span className="text-[#D4A53A] font-heading font-black w-6">0{i + 1}</span>
                 <img src={p.images[0]} alt="" className="h-10 w-10 object-cover border border-[#D4A53A]/15" />
@@ -84,6 +108,8 @@ const Admin = () => {
         </div>
       </section>
 
+      )}
+      {isAdmin && (
       <section className="max-w-7xl mx-auto px-6 lg:px-10 py-12 grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div className="lg:col-span-7 border border-[#D4A53A]/20 bg-[#0F5E60] p-6">
           <div className="flex items-center justify-between mb-5">
@@ -96,7 +122,7 @@ const Admin = () => {
             <table className="w-full text-sm" data-testid="admin-orders-table">
               <thead>
                 <tr className="text-[10px] uppercase tracking-[0.22em] text-[#D4A53A]">
-                  {["Order", "Customer", "Date", "Total", "Status"].map((h) => (
+                  {[t("admin.table.order"), t("admin.table.customer"), t("admin.table.date"), t("admin.table.total"), t("admin.table.status")].map((h) => (
                     <th key={h} className="text-left pb-3 border-b border-[#D4A53A]/20">{h}</th>
                   ))}
                 </tr>
@@ -113,7 +139,7 @@ const Admin = () => {
                         o.status === "Delivered" ? "border-[#D4A53A]/30 text-[#D4A53A]" :
                         o.status === "Shipped" ? "border-white/25 text-white/85" :
                         "border-white/15 text-white/65"
-                      }`}>{o.status}</span>
+                      }`}>{t(`admin.status.${o.status}`)}</span>
                     </td>
                   </tr>
                 ))}
@@ -147,7 +173,7 @@ const Admin = () => {
                 <div className="flex items-center justify-between mt-3">
                   <span className="text-[10px] uppercase tracking-[0.2em] text-white/60">{r.material}</span>
                   <button className="text-xs uppercase tracking-[0.18em] text-[#D4A53A] hover:text-white flex items-center gap-1">
-                    <Eye size={12} /> Review
+                    <Eye size={12} /> {t("admin.review")}
                   </button>
                 </div>
               </li>
@@ -156,13 +182,15 @@ const Admin = () => {
         </div>
       </section>
 
+      )}
+      {isAdmin && (
       <section className="max-w-7xl mx-auto px-6 lg:px-10 pb-20">
         <div className="border border-[#D4A53A]/20 bg-[#0F5E60] p-6">
           <div className="flex items-center justify-between mb-5">
             <h3 className="font-heading font-bold text-white">{t("admin.products")}</h3>
-            <button className="btn-ghost-gold !py-2 !px-4 !text-[11px]" data-testid="admin-add-product-2">
+            <Link to="/admin/products/new" className="btn-ghost-gold !py-2 !px-4 !text-[11px]" data-testid="admin-add-product-2">
               <Plus size={12} /> {t("admin.addProduct")}
-            </button>
+            </Link>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm" data-testid="admin-products-table">
@@ -174,7 +202,7 @@ const Admin = () => {
                 </tr>
               </thead>
               <tbody>
-                {PRODUCTS.map((p) => (
+                {(products || []).map((p) => (
                   <tr key={p.id} className="border-b border-[#D4A53A]/10 hover:bg-[#0A4143]/40 transition-colors">
                     <td className="py-3 flex items-center gap-3">
                       <img src={p.images[0]} alt="" className="h-10 w-10 object-cover border border-[#D4A53A]/15" />
@@ -195,6 +223,7 @@ const Admin = () => {
           </div>
         </div>
       </section>
+      )}
     </div>
   );
 };

@@ -1,0 +1,217 @@
+[
+  {
+    "id": "geometric-plant-pot",
+    "name": "Geometric Plant Pot",
+    "category": "home-decor",
+    "price": 38,
+    "rating": 4.8,
+    "reviews": 124,
+    "bestSeller": true,
+    "inStock": true,
+    "material": "PLA",
+    "materials": [
+      "PLA",
+      "PETG"
+    ],
+    "colors": [
+      "Petrol",
+      "Ivory",
+      "Charcoal"
+    ],
+    "dimensions": "120 × 120 × 140 mm",
+    "description": "A faceted geometric planter with a tessellated surface that catches light from every angle. Drainage hole and matte finish included.",
+    "images": [
+      "https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=900&q=70",
+      "https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?auto=format&fit=crop&w=900&q=70",
+      "https://images.unsplash.com/photo-1483794344563-d27a8d18014e?auto=format&fit=crop&w=900&q=70"
+    ],
+    "new": true
+  },
+  {
+    "id": "cable-organizer-clips",
+    "name": "Cable Organizer Clips",
+    "category": "desk-accessories",
+    "price": 12,
+    "rating": 4.6,
+    "reviews": 89,
+    "bestSeller": true,
+    "inStock": true,
+    "material": "PETG",
+    "materials": [
+      "PETG",
+      "ABS"
+    ],
+    "colors": [
+      "Charcoal",
+      "Gold",
+      "Ivory"
+    ],
+    "dimensions": "Set of 6 · 30 × 18 × 12 mm each",
+    "description": "Clip-on cable management for desks, monitors and TV mounts. Strong adhesive backing and snap-lock for thick cables.",
+    "images": [
+      "https://images.unsplash.com/photo-1558959356-2f36b410cd99?auto=format&fit=crop&w=900&q=70",
+      "https://images.unsplash.com/photo-1593062096033-9a26b09da705?auto=format&fit=crop&w=900&q=70"
+    ],
+    "new": false
+  },
+  {
+    "id": "custom-keychain",
+    "name": "Custom Keychain",
+    "category": "gifts",
+    "price": 9,
+    "rating": 4.9,
+    "reviews": 312,
+    "bestSeller": true,
+    "inStock": true,
+    "material": "PLA",
+    "materials": [
+      "PLA",
+      "Resin"
+    ],
+    "colors": [
+      "Gold",
+      "Petrol",
+      "Brick",
+      "Cobalt"
+    ],
+    "dimensions": "60 × 28 × 4 mm",
+    "description": "Personalized keychain printed with your name, initials or favorite shape. Sealed with a sleek satin coat.",
+    "images": [
+      "https://images.unsplash.com/photo-1602080109637-5f9c00a8c1e9?auto=format&fit=crop&w=900&q=70",
+      "https://images.unsplash.com/photo-1607344645866-009c320b63e0?auto=format&fit=crop&w=900&q=70"
+    ],
+    "new": true
+  },
+  {
+    "id": "miniature-dragon-figure",
+    "name": "Miniature Dragon Figure",
+    "category": "miniatures",
+    "price": 42,
+    "rating": 4.9,
+    "reviews": 76,
+    "bestSeller": false,
+    "inStock": true,
+    "material": "Resin",
+    "materials": [
+      "Resin"
+    ],
+    "colors": [
+      "Charcoal",
+      "Forest",
+      "Gold"
+    ],
+    "dimensions": "90 × 70 × 110 mm",
+    "description": "Hand-finished tabletop dragon, ready to paint or display. Resin-printed at 25-micron layer height for razor-sharp detail.",
+    "images": [
+      "https://images.unsplash.com/photo-1606503153255-59d8b8b18d2c?auto=format&fit=crop&w=900&q=70",
+      "https://images.unsplash.com/photo-1612198273689-fb53d7ec70a8?auto=format&fit=crop&w=900&q=70"
+    ],
+    "new": false
+  },
+  {
+    "id": "replacement-knob",
+    "name": "Replacement Knob",
+    "category": "replacement-parts",
+    "price": 7,
+    "rating": 4.5,
+    "reviews": 41,
+    "bestSeller": false,
+    "inStock": true,
+    "material": "ABS",
+    "materials": [
+      "ABS",
+      "PETG"
+    ],
+    "colors": [
+      "Charcoal",
+      "Bone"
+    ],
+    "dimensions": "32 × 32 × 18 mm",
+    "description": "Replacement knob for appliances, dressers and audio gear. Send us your spec or pick from 40+ presets.",
+    "images": [
+      "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?auto=format&fit=crop&w=900&q=70",
+      "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?auto=format&fit=crop&w=900&q=70"
+    ],
+    "new": false
+  },
+  {
+    "id": "desk-phone-stand",
+    "name": "Desk Phone Stand",
+    "category": "desk-accessories",
+    "price": 24,
+    "rating": 4.7,
+    "reviews": 198,
+    "bestSeller": true,
+    "inStock": true,
+    "material": "PETG",
+    "materials": [
+      "PETG",
+      "PLA"
+    ],
+    "colors": [
+      "Petrol",
+      "Charcoal",
+      "Gold"
+    ],
+    "dimensions": "110 × 80 × 95 mm",
+    "description": "Minimal phone stand with cable pass-through and silicone grip pads. Holds devices up to 13 mm thick.",
+    "images": [
+      "https://images.unsplash.com/photo-1565849904461-04a58ad377e0?auto=format&fit=crop&w=900&q=70",
+      "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?auto=format&fit=crop&w=900&q=70"
+    ],
+    "new": true
+  },
+  {
+    "id": "wall-art-panel",
+    "name": "Wall Art Panel",
+    "category": "home-decor",
+    "price": 89,
+    "rating": 4.8,
+    "reviews": 54,
+    "bestSeller": false,
+    "inStock": false,
+    "material": "PLA",
+    "materials": [
+      "PLA",
+      "PETG"
+    ],
+    "colors": [
+      "Gold",
+      "Ivory",
+      "Petrol"
+    ],
+    "dimensions": "400 × 400 × 18 mm",
+    "description": "A modular parametric wall panel inspired by topographic maps. Mount as a single piece or build a custom mural.",
+    "images": [
+      "https://images.unsplash.com/photo-1604147495798-57beb5d6af73?auto=format&fit=crop&w=900&q=70",
+      "https://images.unsplash.com/photo-1483794344563-d27a8d18014e?auto=format&fit=crop&w=900&q=70"
+    ],
+    "new": false
+  },
+  {
+    "id": "tool-holder",
+    "name": "Tool Holder",
+    "category": "tools-gadgets",
+    "price": 32,
+    "rating": 4.6,
+    "reviews": 67,
+    "bestSeller": false,
+    "inStock": true,
+    "material": "ABS",
+    "materials": [
+      "ABS",
+      "Nylon"
+    ],
+    "colors": [
+      "Charcoal",
+      "Brick"
+    ],
+    "dimensions": "220 × 90 × 60 mm",
+    "description": "Workbench tool caddy with magnetic strip, drill-bit ports and screwdriver slots. Built for daily abuse.",
+    "images": [
+      "https://images.unsplash.com/photo-1530124566582-a618bc2615dc?auto=format&fit=crop&w=900&q=70",
+      "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?auto=format&fit=crop&w=900&q=70"
+    ],
+    "new": true
+  }
+]

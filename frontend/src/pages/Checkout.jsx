@@ -1,34 +1,68 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { CheckCircle2, Lock, CreditCard } from "lucide-react";
+import { CheckCircle2, Lock } from "lucide-react";
 import { toast } from "sonner";
 import { useCart } from "../context/CartContext";
+import { placeOrder } from "../api/orders";
 import { useLocale } from "../context/LocaleContext";
 
 const Checkout = () => {
   const { items, subtotal, clearCart } = useCart();
+  useEffect(() => {
+    setClientOrderId(null);
+  }, [items]);
   const { t, formatPrice } = useLocale();
   const navigate = useNavigate();
   const shipping = subtotal === 0 ? 0 : subtotal >= 75 ? 0 : 8.5;
-  const tax = +(subtotal * 0.24).toFixed(2);
-  const total = subtotal + shipping + tax;
+  const total = subtotal + shipping;
 
   const [form, setForm] = useState({
     email: "", first: "", last: "", address: "", city: "", zip: "", country: "Ελλάδα",
-    card: "", exp: "", cvc: "",
   });
   const [placed, setPlaced] = useState(false);
+  const [orderId, setOrderId] = useState(null);
+  const [clientOrderId, setClientOrderId] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [orderError, setOrderError] = useState("");
 
   const set = (k, v) => setForm((s) => ({ ...s, [k]: v }));
 
-  const place = (e) => {
+  const place = async (e) => {
     e.preventDefault();
     if (!form.email || !form.first || !form.address) {
       toast.error(t("checkout.errorRequired"));
       return;
     }
-    setPlaced(true);
-    clearCart();
+    setSubmitting(true);
+    setOrderError("");
+    const idempotencyKey = clientOrderId || (typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`);
+    if (!clientOrderId) setClientOrderId(idempotencyKey);
+    try {
+      const order = await placeOrder({
+        email: form.email,
+        first_name: form.first,
+        last_name: form.last,
+        shipping_address: form.address,
+        city: form.city,
+        postal_code: form.zip,
+        country: form.country,
+        items: items.map((item) => ({
+          product_id: item.id,
+          quantity: item.qty,
+          color: item.color,
+        })),
+        client_order_id: idempotencyKey,
+      });
+      setOrderId(order.id);
+      setPlaced(true);
+      setClientOrderId(null);
+      clearCart();
+    } catch (err) {
+      setOrderError(err?.response?.data?.detail || "Could not place order.");
+      toast.error(err?.response?.data?.detail || t("checkout.errorRequired"));
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (items.length === 0 && !placed) {
@@ -53,7 +87,7 @@ const Checkout = () => {
         </h1>
         <p className="text-white/75 mt-5">
           {t("checkout.successBody", { email: form.email })}{" "}
-          <span className="text-white font-bold">#LB-{Math.floor(10000 + Math.random()*8999)}</span>.
+          <span className="text-white font-bold">#{orderId || "—"}</span>.
         </p>
         <div className="mt-10 flex flex-wrap gap-4 justify-center">
           <Link to="/shop" className="btn-gold">{t("common.continueShopping")}</Link>
@@ -74,6 +108,7 @@ const Checkout = () => {
 
       <section className="max-w-7xl mx-auto px-6 lg:px-10 py-12 grid grid-cols-1 lg:grid-cols-12 gap-10">
         <form onSubmit={place} className="lg:col-span-7 space-y-10" data-testid="checkout-form">
+          {orderError && <div className="border border-red-400/30 bg-red-950/30 p-4 text-red-200 text-sm">{orderError}</div>}
           <FormBlock title={t("checkout.contact")}>
             <Field label={t("checkout.email")}>
               <input type="email" value={form.email} onChange={(e) => set("email", e.target.value)} data-testid="checkout-email" className="brand-input" placeholder="you@studio.com" />
@@ -105,25 +140,17 @@ const Checkout = () => {
             </div>
           </FormBlock>
 
-          <FormBlock title={t("checkout.payment")} badge={t("checkout.paymentBadge")}>
-            <div className="border border-[#D4A53A]/20 p-5 bg-[#0A4143]/50 flex items-center gap-3 mb-5">
-              <CreditCard size={16} className="text-[#D4A53A]" />
-              <div className="text-sm text-white/75">{t("checkout.paymentNote")}</div>
-            </div>
-            <Field label={t("checkout.card")}>
-              <input value={form.card} onChange={(e) => set("card", e.target.value)} data-testid="checkout-card" className="brand-input" placeholder="4242 4242 4242 4242" />
-            </Field>
-            <div className="grid grid-cols-2 gap-5">
-              <Field label={t("checkout.exp")}>
-                <input value={form.exp} onChange={(e) => set("exp", e.target.value)} data-testid="checkout-exp" className="brand-input" placeholder="MM / YY" />
-              </Field>
-              <Field label={t("checkout.cvc")}>
-                <input value={form.cvc} onChange={(e) => set("cvc", e.target.value)} data-testid="checkout-cvc" className="brand-input" placeholder="123" />
-              </Field>
+          <FormBlock title={t("checkout.payment")}>
+            <div className="border border-[#D4A53A]/20 p-5 bg-[#0A4143]/50 flex items-center gap-3">
+              <Lock size={16} className="text-[#D4A53A]" />
+              <div className="text-sm text-white/75">
+                Payment is not available yet. This checkout does not process payments and does not collect card details.
+                Future payment will use a hosted, tokenized processor flow.
+              </div>
             </div>
           </FormBlock>
 
-          <button type="submit" data-testid="checkout-place-order" className="btn-gold w-full justify-center">
+          <button type="submit" data-testid="checkout-place-order" className="btn-gold w-full justify-center" disabled={submitting}>
             <Lock size={14} /> {t("checkout.placeOrder")} · {formatPrice(total)}
           </button>
         </form>
@@ -147,8 +174,8 @@ const Checkout = () => {
 
             <div className="border-t border-[#D4A53A]/15 mt-6 pt-5 space-y-3 text-sm">
               <Row k={t("common.subtotal")} v={formatPrice(subtotal)} />
+              <div className="text-xs text-white/55">VAT included in product prices; no separate tax is calculated.</div>
               <Row k={t("common.shipping")} v={shipping === 0 ? t("common.free") : formatPrice(shipping)} />
-              <Row k={t("common.tax")} v={formatPrice(tax)} />
               <div className="border-t border-[#D4A53A]/15 pt-3 flex items-center justify-between">
                 <span className="font-heading text-white">{t("common.total")}</span>
                 <span data-testid="checkout-total" className="font-heading font-bold text-[#D4A53A] text-xl">{formatPrice(total)}</span>

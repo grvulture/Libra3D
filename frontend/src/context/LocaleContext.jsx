@@ -4,7 +4,7 @@ import { TRANSLATIONS } from "../data/translations";
 const LocaleContext = createContext(null);
 export const useLocale = () => useContext(LocaleContext);
 
-const STORAGE_KEY = "libra3d_locale_v1";
+const STORAGE_KEY = "3dlibra_locale_v1";
 
 // Base prices in catalogue are EUR. Conversion rates relative to EUR.
 const RATES = {

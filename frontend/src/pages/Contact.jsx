@@ -2,20 +2,40 @@ import React, { useState } from "react";
 import { Mail, Phone, MapPin, Send, MessageSquare, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import { useLocale } from "../context/LocaleContext";
+import { createTicket } from "../api/tickets";
 
 const Contact = () => {
   const { t } = useLocale();
   const [form, setForm] = useState({ name: "", email: "", subject: "General", message: "" });
   const [sent, setSent] = useState(false);
+  const [ticketId, setTicketId] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.message) {
       toast.error(t("contact.errorRequired"));
       return;
     }
-    setSent(true);
-    toast.success(t("contact.successToast"));
+    setSubmitting(true);
+    setError("");
+    try {
+      const result = await createTicket({
+        name: form.name,
+        email: form.email,
+        subject: form.subject,
+        message: form.message,
+      });
+      setTicketId(result.id);
+      setSent(true);
+      toast.success(t("contact.successToast"));
+    } catch (err) {
+      setError(err?.response?.data?.detail || "Could not submit your message.");
+      toast.error(err?.response?.data?.detail || t("contact.errorRequired"));
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -31,9 +51,9 @@ const Contact = () => {
       <section className="max-w-7xl mx-auto px-6 lg:px-10 py-14 grid grid-cols-1 lg:grid-cols-12 gap-10">
         <aside className="lg:col-span-4 space-y-5">
           {[
-            { icon: Mail, t: t("contact.emailLabel"), v: "hello@libra3d.gr" },
+            { icon: Mail, t: t("contact.emailLabel"), v: "info@3dlibra.gr" },
             { icon: Phone, t: t("contact.phoneLabel"), v: "+30 69 8586 8284" },
-            { icon: MapPin, t: t("contact.studioLabel"), v: (<>Στασινοπουλου 18<br />Αγιος Δημητριος</>) },
+            { icon: MapPin, t: t("contact.studioLabel"), v: t("contact.studioValue") },
             { icon: MessageSquare, t: t("contact.chatLabel"), v: t("contact.chatValue") },
           ].map((c) => (
             <div key={c.t} className="border border-[#D4A53A]/20 p-6 bg-[#0F5E60] flex gap-5">
@@ -56,7 +76,7 @@ const Contact = () => {
               </div>
               <h2 className="font-heading font-black text-3xl">{t("contact.successTitle")}</h2>
               <p className="text-white/75 mt-3">
-                {t("contact.successBody", { name: form.name.split(" ")[0], email: form.email })}
+                {t("contact.successBody", { name: form.name.split(" ")[0], email: form.email })}{ticketId ? ` Ticket reference: ${ticketId}` : ""}
               </p>
               <button
                 onClick={() => { setSent(false); setForm({ name: "", email: "", subject: "General", message: "" }); }}
@@ -67,6 +87,7 @@ const Contact = () => {
             </div>
           ) : (
             <form onSubmit={submit} data-testid="contact-form" className="border border-[#D4A53A]/20 bg-[#0F5E60] p-7 lg:p-10 space-y-5">
+              {error && <div className="border border-red-400/30 bg-red-950/30 p-4 text-red-200 text-sm mb-4">{error}</div>}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <Field label={t("contact.name")}>
                   <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} data-testid="contact-name" className="brand-input" />
@@ -85,7 +106,7 @@ const Contact = () => {
               <Field label={t("contact.message")}>
                 <textarea rows={6} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} data-testid="contact-message" className="brand-input resize-none" />
               </Field>
-              <button type="submit" className="btn-gold" data-testid="contact-send">
+              <button type="submit" className="btn-gold" data-testid="contact-send" disabled={submitting}>
                 <Send size={14} /> {t("contact.send")}
               </button>
             </form>

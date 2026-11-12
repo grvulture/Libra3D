@@ -34,8 +34,8 @@ const About = () => {
       <section className="max-w-7xl mx-auto px-6 lg:px-10 py-12">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
           {[
-            { icon: Factory, k: "22", t: t("about.stat1") },
-            { icon: Award, k: "14.2k", t: t("about.stat2") },
+            { icon: Factory, k: "22+", t: t("about.stat1") },
+            { icon: Award, k: "1k+", t: t("about.stat2") },
             { icon: Users, k: "8", t: t("about.stat3") },
             { icon: Recycle, k: "97%", t: t("about.stat4") },
           ].map((s) => (
