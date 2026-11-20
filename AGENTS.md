@@ -9,6 +9,13 @@ Project root: `/home/grvulture/projects/libra3d`
 - Database: MongoDB, configured through `backend/.env`; development uses MongoDB Atlas. No local MongoDB is installed.
 - Tests: backend pytest; frontend Jest via CRA/CRACO.
 
+## Implementation status
+
+- Products, admin authentication, support tickets, and orders are connected to the FastAPI/MongoDB backend.
+- Admin dashboard, product management, order management, and ticket management are implemented for authorized roles.
+- Checkout persists orders with server-calculated totals.
+- Informational/showcase pages and the dashboard's mock revenue/request data remain prototype content.
+
 ## Run locally
 
 Backend:
@@ -82,6 +89,7 @@ Products:
   - Regenerate seed JSON: `node frontend/scripts/export-products.mjs`
   - Dry run: `cd backend && ./venv/bin/python seed_products.py`
   - Apply: `cd backend && ./venv/bin/python seed_products.py --apply`
+- Admin product management uses `/api/admin/products`; product changes update the same MongoDB collection read by `/api/products`.
 - The initial import inserted 8 products. Reruns are idempotent and skip existing documents.
 
 Orders:

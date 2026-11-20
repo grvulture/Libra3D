@@ -27,14 +27,14 @@ export const CATEGORIES = [
     name: "Miniatures & Models",
     blurb: "Hand-finished tabletop figures and architectural models.",
     image:
-      "https://images.unsplash.com/photo-1606503153255-59d8b8b18d2c?auto=format&fit=crop&w=900&q=70",
+      "https://ix-marketing.imgix.net/global.jpg?auto=format,compress&w=900&q=70",
   },
   {
     id: "replacement-parts",
     name: "Replacement Parts",
     blurb: "Custom-engineered replacements for appliances & gear.",
     image:
-      "https://images.unsplash.com/photo-1612198273689-fb53d7ec70a8?auto=format&fit=crop&w=900&q=70",
+      "https://ix-marketing.imgix.net/auto-hero.png?auto=format,compress&w=900&q=70",
   },
   {
     id: "tools-gadgets",
