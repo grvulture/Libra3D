@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Instagram, Twitter, Facebook, Linkedin, Mail, Phone, MapPin } from "lucide-react";
+import { Instagram, Facebook, Mail, Phone, MapPin, Smartphone, MessageCircle } from "lucide-react";
 import { BRAND } from "../data/products";
 import { useLocale } from "../context/LocaleContext";
 
@@ -25,7 +25,7 @@ export const Footer = () => {
             {t("footer.tagline")}
           </p>
           <div className="flex items-center gap-3 mt-7">
-            {[Instagram, Twitter, Facebook, Linkedin].map((Icon, i) => (
+            {[Instagram, Facebook].map((Icon, i) => (
               <a
                 key={i}
                 href="#"
@@ -45,7 +45,6 @@ export const Footer = () => {
             <li><Link data-testid="footer-link-shop" to="/shop" className="hover:text-[#D4A53A]">{t("footer.allProducts")}</Link></li>
             <li><Link to="/categories" className="hover:text-[#D4A53A]">{t("nav.categories")}</Link></li>
             <li><Link to="/custom-orders" className="hover:text-[#D4A53A]">{t("nav.customOrders")}</Link></li>
-            <li><Link to="/admin" className="hover:text-[#D4A53A]">{t("footer.dashboard")}</Link></li>
           </ul>
         </div>
 
@@ -54,8 +53,14 @@ export const Footer = () => {
           <ul className="space-y-3 text-sm text-white/80">
             <li><Link to="/about" className="hover:text-[#D4A53A]">{t("nav.about")}</Link></li>
             <li><Link to="/contact" className="hover:text-[#D4A53A]">{t("footer.contact")}</Link></li>
-            <li><a href="#" className="hover:text-[#D4A53A]">{t("footer.careers")}</a></li>
-            <li><a href="#" className="hover:text-[#D4A53A]">{t("footer.press")}</a></li>
+            <li className="space-y-1">
+              <div className="text-white/90">{t("footer.headOffice")}:</div>
+              <div className="text-white/70">{t("footer.headOfficeLocation")}</div>
+            </li>
+            <li className="space-y-1">
+              <div className="text-white/90">{t("footer.branch")}:</div>
+              <div className="text-white/70">{t("footer.branchLocation")}</div>
+            </li>
           </ul>
         </div>
 
@@ -72,16 +77,42 @@ export const Footer = () => {
             </li>
             <li className="flex items-center gap-3">
               <Phone size={16} className="text-[#D4A53A]" />
-              <span>+30 69 8586 8284</span>
+              <a href="tel:+302286082441" className="hover:text-[#D4A53A]">+30 22860 82441</a>
+            </li>
+            <li className="flex items-center gap-3">
+              <Smartphone size={16} className="text-[#D4A53A]" />
+              <a href="tel:+306985868284" className="hover:text-[#D4A53A]">+30 69 8586 8284</a>
+            </li>
+            <li className="flex items-center gap-3">
+              <MessageCircle size={16} className="text-[#D4A53A]" aria-hidden="true" />
+              <a
+                href="viber://chat?number=%2B306985868284"
+                className="hover:text-[#D4A53A]"
+                aria-label={`${t("footer.viber")}: +30 69 8586 8284`}
+              >
+                {t("footer.viber")} · +30 69 8586 8284
+              </a>
             </li>
           </ul>
         </div>
       </div>
 
       <div className="border-t border-[#D4A53A]/10">
-        <div className="max-w-7xl mx-auto px-6 lg:px-10 py-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-white/60">
-          <div>{t("footer.rights")}</div>
-          <div className="flex items-center gap-6">
+        <div className="max-w-7xl mx-auto px-6 lg:px-10 py-6 flex flex-wrap items-center justify-center md:justify-between gap-x-6 gap-y-3 text-xs text-white/60">
+          <div className="text-center md:text-left">{t("footer.rights")}</div>
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+            <a
+              href="https://www.axxis.dev"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-grid grid-cols-[1fr_auto_1fr] items-center gap-x-2 hover:text-[#D4A53A]"
+            >
+              <span className="text-right">{t("footer.creditDevelopment")}  ⟐</span>
+              <strong>AXXIS.dev</strong>
+              <span className="text-left">⟐  {t("footer.creditHosting")}</span>
+            </a>
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
             <a href="#" className="hover:text-[#D4A53A]">{t("footer.privacy")}</a>
             <a href="#" className="hover:text-[#D4A53A]">{t("footer.terms")}</a>
             <a href="#" className="hover:text-[#D4A53A]">{t("footer.shippingLink")}</a>
